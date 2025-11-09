@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 import { z } from "zod";
 import { getSupabaseAdmin } from "./supaAdmin";
 import { News, NewsInsert } from "./types";
@@ -18,9 +18,9 @@ const newsSchema = z.object({
 });
 
 // HTMLサニタイズ関数
-function sanitizeHtml(html: string): string {
-  return DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: [
+function sanitizeBodyHtml(html: string): string {
+  return sanitizeHtml(html, {
+    allowedTags: [
       "p",
       "br",
       "strong",
@@ -43,16 +43,11 @@ function sanitizeHtml(html: string): string {
       "span",
       "div",
     ],
-    ALLOWED_ATTR: [
-      "href",
-      "src",
-      "alt",
-      "title",
-      "class",
-      "id",
-      "target",
-      "rel",
-    ],
+    allowedAttributes: {
+      a: ["href", "target", "rel"],
+      img: ["src", "alt", "title"],
+      "*": ["class", "id"],
+    },
   });
 }
 
@@ -106,7 +101,7 @@ export async function createNews(formData: FormData) {
     const validated = newsSchema.parse(rawData);
 
     // HTMLサニタイズ
-    const sanitizedBodyHtml = sanitizeHtml(validated.body_html);
+    const sanitizedBodyHtml = sanitizeBodyHtml(validated.body_html);
 
     const newsData: NewsInsert = {
       genre: validated.genre,
@@ -151,7 +146,7 @@ export async function updateNews(id: number, formData: FormData) {
     const validated = newsSchema.parse(rawData);
 
     // HTMLサニタイズ
-    const sanitizedBodyHtml = sanitizeHtml(validated.body_html);
+    const sanitizedBodyHtml = sanitizeBodyHtml(validated.body_html);
 
     const newsData = {
       genre: validated.genre,
