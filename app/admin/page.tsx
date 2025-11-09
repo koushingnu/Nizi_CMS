@@ -19,7 +19,7 @@ export default function AdminPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
-    title: "",
+    genre: "",
     body_html: "",
     target_site: "BOTH" as "LP" | "HP" | "BOTH",
     status: "draft" as "draft" | "published",
@@ -50,7 +50,7 @@ export default function AdminPage() {
   // フォームリセット
   function resetForm() {
     setFormData({
-      title: "",
+      genre: "",
       body_html: "",
       target_site: "BOTH",
       status: "draft",
@@ -65,7 +65,7 @@ export default function AdminPage() {
   // 編集モード開始
   function startEdit(news: News) {
     setFormData({
-      title: news.title,
+      genre: news.genre,
       body_html: news.body_html,
       target_site: news.target_site,
       status: news.status,
@@ -85,7 +85,7 @@ export default function AdminPage() {
     setSuccessMessage(null);
 
     const data = new FormData();
-    data.append("title", formData.title);
+    data.append("genre", formData.genre);
     data.append("body_html", formData.body_html);
     data.append("target_site", formData.target_site);
     data.append("status", formData.status);
@@ -113,8 +113,8 @@ export default function AdminPage() {
   }
 
   // 削除処理
-  async function handleDelete(id: number, title: string) {
-    if (!confirm(`「${title}」を削除しますか？`)) {
+  async function handleDelete(id: number, genre: string) {
+    if (!confirm(`「${genre}」を削除しますか？`)) {
       return;
     }
 
@@ -176,13 +176,13 @@ export default function AdminPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                タイトル *
+                ジャンル *
               </label>
               <input
                 type="text"
-                value={formData.title}
+                value={formData.genre}
                 onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
+                  setFormData({ ...formData, genre: e.target.value })
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -297,7 +297,7 @@ export default function AdminPage() {
                       ID
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      タイトル
+                      ジャンル
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       対象サイト
@@ -320,7 +320,7 @@ export default function AdminPage() {
                         {news.id}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-900">
-                        {news.title}
+                        {news.genre}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <span
@@ -363,7 +363,7 @@ export default function AdminPage() {
                           編集
                         </button>
                         <button
-                          onClick={() => handleDelete(news.id, news.title)}
+                          onClick={() => handleDelete(news.id, news.genre)}
                           disabled={isPending}
                           className="text-red-600 hover:text-red-800 font-medium disabled:opacity-50"
                         >

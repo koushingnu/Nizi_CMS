@@ -1,6 +1,6 @@
 export type News = {
   id: number;
-  title: string;
+  genre: string;
   body_html: string;
   target_site: "LP" | "HP" | "BOTH";
   status: "draft" | "published";

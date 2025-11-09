@@ -1,7 +1,7 @@
 -- NEWS テーブル作成
 CREATE TABLE IF NOT EXISTS public.news (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  title text NOT NULL,
+  genre text NOT NULL,
   body_html text NOT NULL,
   target_site text NOT NULL CHECK (target_site IN ('LP', 'HP', 'BOTH')),
   status text NOT NULL CHECK (status IN ('draft', 'published')),

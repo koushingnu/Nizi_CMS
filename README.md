@@ -77,7 +77,7 @@ http://localhost:3000 にアクセス
 
 ### 機能
 
-- ✅ タイトル・本文（HTML）の入力
+- ✅ ジャンル・本文（HTML）の入力
 - ✅ 対象サイト選択（LP / HP / BOTH）
 - ✅ ステータス管理（下書き / 公開）
 - ✅ 公開日時の設定
@@ -108,7 +108,7 @@ export default function NewsListLP() {
     async function fetchNews() {
       const { data, error } = await supabase
         .from("news")
-        .select("id,title,body_html,target_site,published_at")
+        .select("id,genre,body_html,target_site,published_at")
         .eq("status", "published")
         .lte("published_at", new Date().toISOString())
         .order("published_at", { ascending: false });
@@ -136,7 +136,7 @@ export default function NewsListLP() {
     <ul>
       {items.map((n) => (
         <li key={n.id}>
-          <h3>{n.title}</h3>
+          <h3>{n.genre}</h3> {/* ジャンル表示 */}
           <time>{new Date(n.published_at).toLocaleDateString("ja-JP")}</time>
           <div dangerouslySetInnerHTML={{ __html: n.body_html }} />
         </li>
@@ -179,7 +179,7 @@ CDN から Supabase JS を読み込んで使用:
       async function loadNews() {
         const { data, error } = await supabaseClient
           .from("news")
-          .select("id,title,body_html,target_site,published_at")
+          .select("id,genre,body_html,target_site,published_at")
           .eq("status", "published")
           .lte("published_at", new Date().toISOString())
           .order("published_at", { ascending: false });
@@ -198,7 +198,7 @@ CDN から Supabase JS を読み込んで使用:
           .map(
             (n) => `
         <article>
-          <h3>${n.title}</h3>
+          <h3>${n.genre}</h3>  <!-- ジャンル表示 -->
           <time>${new Date(n.published_at).toLocaleDateString("ja-JP")}</time>
           <div>${n.body_html}</div>
         </article>
@@ -267,7 +267,7 @@ CDN から Supabase JS を読み込んで使用:
 | カラム       | 型          | 説明                            |
 | ------------ | ----------- | ------------------------------- |
 | id           | bigint      | 主キー（自動採番）              |
-| title        | text        | タイトル                        |
+| genre        | text        | ジャンル                        |
 | body_html    | text        | 本文（HTML）                    |
 | target_site  | text        | 対象サイト（LP / HP / BOTH）    |
 | status       | text        | ステータス（draft / published） |

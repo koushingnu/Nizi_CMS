@@ -8,7 +8,7 @@ import { News, NewsInsert } from "./types";
 
 // バリデーションスキーマ
 const newsSchema = z.object({
-  title: z.string().min(1, "タイトルは必須です"),
+  genre: z.string().min(1, "ジャンルは必須です"),
   body_html: z.string().min(1, "本文は必須です"),
   target_site: z.enum(["LP", "HP", "BOTH"]),
   status: z.enum(["draft", "published"]),
@@ -95,7 +95,7 @@ export async function getNewsById(id: number): Promise<News | null> {
 export async function createNews(formData: FormData) {
   try {
     const rawData = {
-      title: formData.get("title") as string,
+      genre: formData.get("genre") as string,
       body_html: formData.get("body_html") as string,
       target_site: formData.get("target_site") as string,
       status: formData.get("status") as string,
@@ -109,7 +109,7 @@ export async function createNews(formData: FormData) {
     const sanitizedBodyHtml = sanitizeHtml(validated.body_html);
 
     const newsData: NewsInsert = {
-      title: validated.title,
+      genre: validated.genre,
       body_html: sanitizedBodyHtml,
       target_site: validated.target_site as "LP" | "HP" | "BOTH",
       status: validated.status as "draft" | "published",
@@ -140,7 +140,7 @@ export async function createNews(formData: FormData) {
 export async function updateNews(id: number, formData: FormData) {
   try {
     const rawData = {
-      title: formData.get("title") as string,
+      genre: formData.get("genre") as string,
       body_html: formData.get("body_html") as string,
       target_site: formData.get("target_site") as string,
       status: formData.get("status") as string,
@@ -154,7 +154,7 @@ export async function updateNews(id: number, formData: FormData) {
     const sanitizedBodyHtml = sanitizeHtml(validated.body_html);
 
     const newsData = {
-      title: validated.title,
+      genre: validated.genre,
       body_html: sanitizedBodyHtml,
       target_site: validated.target_site as "LP" | "HP" | "BOTH",
       status: validated.status as "draft" | "published",
